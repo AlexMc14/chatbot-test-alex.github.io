@@ -58,14 +58,17 @@
             const input = document.getElementById('message');
             const userMessage = input.value;
 
+            // Función para reemplazar los saltos de línea por <br>
+            function formatMessage(message) {
+                return message.replace(/\n/g, '<br>');
+            }
+
             // Agregar el mensaje del usuario al chat
-            messagesDiv.innerHTML += `<div class="user">Tú: ${userMessage}</div>`;
+            messagesDiv.innerHTML += `<div class="user">Tú: ${formatMessage(userMessage)}</div>`;
             input.value = '';
 
             try {
                 // Enviar solicitud a la API
-                // https://pyro14.pythonanywhere.com/
-                // const response = await fetch('http://127.0.0.1:5000/chat', {
                 const response = await fetch('https://pyro14.pythonanywhere.com/chat', {
                     method: 'POST',
                     headers: {
@@ -76,7 +79,7 @@
 
                 // Obtener y mostrar la respuesta del chatbot
                 const data = await response.json();
-                messagesDiv.innerHTML += `<div class="bot">Bot: ${data.response}</div>`;
+                messagesDiv.innerHTML += `<div class="bot">Bot: ${formatMessage(data.response)}</div>`;
             } catch (error) {
                 messagesDiv.innerHTML += `<div class="bot">Bot: Ocurrió un error. Inténtalo de nuevo.</div>`;
                 console.error('Error:', error);
