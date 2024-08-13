@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        #messages {
+            border: 1px solid #ddd;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        #messages div {
+            margin-bottom: 10px;
+        }
+        #messages .user {
+            color: blue;
+        }
+        #messages .bot {
+            color: green;
+        }
+        input[type="text"] {
+            width: calc(100% - 90px);
+            padding: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <h2>Chatbot</h2>
+        <div id="messages"></div>
+        <form id="chat-form">
+            <input type="text" id="message" placeholder="Escribe tu mensaje aquí..." required>
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+    <script>
+        const form = document.getElementById('chat-form');
+        const messagesDiv = document.getElementById('messages');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('message');
+            const userMessage = input.value;
+
+            // Agregar el mensaje del usuario al chat
+            messagesDiv.innerHTML += `<div class="user">Tú: ${userMessage}</div>`;
+            input.value = '';
+
+            try {
+                // Enviar solicitud a la API
+                // https://pyro14.pythonanywhere.com/
+                // const response = await fetch('http://127.0.0.1:5000/chat', {
+                const response = await fetch('https://pyro14.pythonanywhere.com/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage }),
+                });
+
+                // Obtener y mostrar la respuesta del chatbot
+                const data = await response.json();
+                messagesDiv.innerHTML += `<div class="bot">Bot: ${data.response}</div>`;
+            } catch (error) {
+                messagesDiv.innerHTML += `<div class="bot">Bot: Ocurrió un error. Inténtalo de nuevo.</div>`;
+                console.error('Error:', error);
+            }
+
+            // Desplazar el chat hacia abajo
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+    </script>
+</body>
+</html>
