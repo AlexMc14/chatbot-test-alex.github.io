@@ -86,10 +86,19 @@
             white-space: pre-wrap; /* Mantiene los saltos de línea y espacios en blanco */
             word-wrap: break-word; /* Ajusta el texto largo dentro del contenedor */
         }
+        .flex {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+        }
     </style>
 </head>
-    <a href="index.html">Chatbot</a>
 <body>
+    <a href="index.html">Chatbot</a>
+    <a href="codigos.html">Códigos</a>
     <div class="autocomplete-container">
         <!-- Botón de copiar -->
         <button id="copy-button" class="copy-button">Copiar Respuesta</button>
@@ -123,7 +132,7 @@
                         div.addEventListener('click', function() {
                             const respuesta = item.responses[0].replace(/<br\s*\/?>/gi, '\n')
                             const nombre = document.getElementById('autocomplete-input-1').value
-                            responseContainer.innerHTML = respuesta.replace('Luca', nombre);
+                            responseContainer.innerHTML = respuesta.replaceAll('Luca', nombre);
                             listContainer.innerHTML = '';
                         });
                         listContainer.appendChild(div);
