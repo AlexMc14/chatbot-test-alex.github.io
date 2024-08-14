@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocompletar con Desplegable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .copy-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .autocomplete-container input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            outline: none;
+        }
+        .autocomplete-container input:focus {
+            border-color: #007bff;
+        }
+        .autocomplete-list {
+            position: absolute;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-top: none;
+            background-color: #fff;
+            border-radius: 0 0 5px 5px;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .autocomplete-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .autocomplete-item:hover {
+            background-color: #f0f0f0;
+        }
+        #response-text {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+            font-size: 16px;
+            overflow-y: scroll;
+            max-height: 300px;
+            white-space: pre-wrap; /* Mantiene los saltos de línea y espacios en blanco */
+            word-wrap: break-word; /* Ajusta el texto largo dentro del contenedor */
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html">Chatbot</a>
+    <div class="autocomplete-container">
+        <!-- Botón de copiar -->
+        <button id="copy-button" class="copy-button">Copiar Respuesta</button>
+        <!-- Campo de entrada y lista desplegable -->
+        <input type="text" id="autocomplete-input-1" placeholder="Nombre para el correo">
+        <input type="text" id="autocomplete-input-2" placeholder="Escribe algo...">
+        <div id="autocomplete-list" class="autocomplete-list"></div>
+        <div id="response-text"></div>
+    </div>
+
+    <script src="templates.js"></script>
+    <script>
+        const input1 = document.getElementById('autocomplete-input-1');
+        const input2 = document.getElementById('autocomplete-input-2');
+        const listContainer = document.getElementById('autocomplete-list');
+        const responseContainer = document.getElementById('response-text');
+        const copyButton = document.getElementById('copy-button');
+
+        // Agrega un listener a ambos campos de entrada
+        [input1, input2].forEach(input => {
+            input.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                listContainer.innerHTML = '';
+
+                if (query && data.length) {
+                    const filteredData = data.filter(item => item.tag.toLowerCase().includes(query.toLowerCase()));
+                    filteredData.forEach(item => {
+                        const div = document.createElement('div');
+                        div.classList.add('autocomplete-item');
+                        div.textContent = item.tag.toLowerCase();
+                        div.addEventListener('click', function() {
+                            const respuesta = item.responses[0].replace(/<br\s*\/?>/gi, '\n')
+                            const nombre = document.getElementById('autocomplete-input-1').value
+                            responseContainer.innerHTML = respuesta.replace('Luca', nombre);
+                            listContainer.innerHTML = '';
+                        });
+                        listContainer.appendChild(div);
+                    });
+                }
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!listContainer.contains(event.target) && event.target !== input1 && event.target !== input2) {
+                listContainer.innerHTML = '';
+            }
+        });
+
+        // Función para copiar la respuesta al portapapeles
+        copyButton.addEventListener('click', function() {
+            const text = responseContainer.textContent;
+            if (text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Texto copiado al portapapeles!');
+                }).catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            } else {
+                alert('No hay texto para copiar.');
+            }
+        });
+    </script>
+</body>
+</html>
